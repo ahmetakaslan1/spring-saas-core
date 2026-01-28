@@ -55,9 +55,13 @@ Projeyi yerel ortamınızda en kolay şekilde çalıştırmak için **Docker** k
 - Bilgisayarınızda [Docker Desktop](https://www.docker.com/products/docker-desktop/) kurulu ve çalışır durumda olmalıdır.
 - Projeyi klonlayın:
   ```bash
-  git clone https://github.com/kullaniciadim/order-management.git
-  cd order-management
+  git clone https://github.com/ahmetakaslan1/spring-saas-core.git
+  cd spring-saas-core
   ```
+
+### **Detaylı Proje ve Kod Analizi**
+
+Projenin mimarisi, güvenlik akışı ve kod yapısı hakkında **çok daha detaylı bilgi (teknik döküman)** için lütfen [PROJECT_EXPLANATION.md](https://github.com/ahmetakaslan1/spring-saas-core/blob/master/PROJECT_EXPLANATION.md) dosyasını inceleyin.
 
 ### 2. Çevresel Değişkenler (.env)
 

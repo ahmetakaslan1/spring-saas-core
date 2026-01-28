@@ -55,9 +55,13 @@ We recommend using **Docker** to run the project in your local environment most 
 - Make sure [Docker Desktop](https://www.docker.com/products/docker-desktop/) is installed and running on your machine.
 - Clone the project:
   ```bash
-  git clone https://github.com/username/order-management.git
-  cd order-management
+  git clone https://github.com/ahmetakaslan1/spring-saas-core.git
+  cd spring-saas-core
   ```
+
+### **Detailed Project & Code Analysis**
+
+For **in-depth technical documentation** regarding the project architecture, security flow, and code structure, please refer to the [PROJECT_EXPLANATION_ENG.md](https://github.com/ahmetakaslan1/spring-saas-core/blob/master/PROJECT_EXPLANATION_ENG.md) file.
 
 ### 2. Environment Variables (.env)
 

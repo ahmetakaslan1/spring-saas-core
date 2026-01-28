@@ -67,11 +67,7 @@ Bunu sağlayan sınıf: **`GlobalExceptionHandler`**
 Bu sınıf tüm uygulamayı dinler ve bir hata fırlatıldığında araya girer.
 
 **Örnek Senaryo:** Kullanıcı geçersiz bir e-posta ile kayıt olmaya çalışıyor.
-
-**Standart Java Hatası (Kötü):**
-`ConstraintViolationException: email invalid format...`
-
-**Bizim Döndüğümüz Cevap (İyi):**
+**Cevap:**
 
 ```json
 {
@@ -81,25 +77,49 @@ Bu sınıf tüm uygulamayı dinler ve bir hata fırlatıldığında araya girer.
     "code": "VALIDATION_ERROR",
     "details": "Girilen bilgiler geçersiz",
     "fieldErrors": {
-      "email": ["Geçerli bir e-posta adresi giriniz"],
-      "password": ["Şifre en az 6 karakter olmalıdır"]
+      "email": ["Geçerli bir e-posta adresi giriniz"]
     }
   }
 }
 ```
 
-Bu yapı sayesinde Frontend geliştiricisi, hatanın hangi alanda (field) olduğunu ve kullanıcıya ne söylemesi gerektiğini kolayca anlar.
-
 ---
 
-## 4. Varlıklar ve İlişkiler (Data Model)
+## 4. Kod Bileşenleri ve Görevleri (Component Deep Dive)
 
-Projenin veri tabanındaki karşılıkları olan sınıflardır (Entity).
+Profesyonel bir backend projesinde "ne, neden kullanılır?" sorusunun cevabı:
 
-- **User (Kullanıcı):** Sisteme giriş yapan kişiler. (Ad, email, şifre, rol).
-- **Order (Sipariş):** (Geliştirilecek) Kullanıcının verdiği siparişler.
+### 🛠 DTO (Data Transfer Object)
 
-İlişki: **Bir Kullanıcının, ÇOK siparişi olabilir (One-to-Many).**
+Veritabanı varlıklarımızı (Entity) doğrudan dış dünyaya açmak güvenlik riski oluşturur. Bu yüzden **DTO** kullanırız.
+
+- **Ne Yapar:** Sadece Client'ın ihtiyacı olan veriyi taşır.
+- **Örnek:** `RegisterRequest` (Kullanıcıdan sadece gerekli bilgileri alır), `LoginResponse` (Sadece token döner).
+
+### 🔄 Mapper (Dönüştürücü)
+
+Entity ve DTO arasındaki dönüşümü sağlar.
+
+- **Ne Yapar:** `User` entity'sini `UserResponse` DTO'suna çevirir.
+- **Neden:** Kod tekrarını önler ve Service katmanındaki "set" işlemlerini azaltır.
+
+### 🧠 Service (İş Mantığı)
+
+Uygulamanın zekası buradadır.
+
+- **Örnek:** `AuthService`.
+- **Görevi:** "Kayıt ol" isteği geldiğinde şifreyi hash'ler, kullanıcıyı veritabanına kaydeder ve token üretip döner. Controller asla bu detayları bilmez.
+
+### 🎮 Controller (Trafik Polisi)
+
+Gelen istekleri karşılar ve ilgili servise yönlendirir.
+
+- **Örnek:** `AuthController`.
+- **Görevi:** `@Valid` notasyonu ile gelen verinin doğruluğunu (email formatı, şifre uzunluğu) kontrol eder ve `AuthService`'i çağırır.
+
+### 🛡 Exception Handling (Hata Yönetimi)
+
+Kodun herhangi bir yerinde hata fırlatıldığında (örn: `throw new BusinessException("Stok yok")`), bu hatayı yakalayıp kullanıcıya anlamlı bir JSON döner.
 
 ---
 

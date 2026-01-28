@@ -67,11 +67,7 @@ The class providing this is: **`GlobalExceptionHandler`**
 This class listens to the entire application and intervenes when an exception is thrown.
 
 **Example Scenario:** User tries to register with an invalid email.
-
-**Standard Java Error (Bad):**
-`ConstraintViolationException: email invalid format...`
-
-**Our Response (Good):**
+**Response:**
 
 ```json
 {
@@ -81,25 +77,49 @@ This class listens to the entire application and intervenes when an exception is
     "code": "VALIDATION_ERROR",
     "details": "Invalid input data",
     "fieldErrors": {
-      "email": ["Please enter a valid email address"],
-      "password": ["Password must be at least 6 characters"]
+      "email": ["Please enter a valid email address"]
     }
   }
 }
 ```
 
-Thanks to this structure, the Frontend developer easily understands in which field the error occurred and what to tell the user.
-
 ---
 
-## 4. Entities and Relationships (Data Model)
+## 4. Code Components & Roles (Component Deep Dive)
 
-These are the classes corresponding to tables in the database (Entity).
+The answer to "what is used where and why" in a professional backend project:
 
-- **User:** People logging into the system. (Name, email, password, role).
-- **Order:** (To be developed) Orders placed by the user.
+### 🛠 DTO (Data Transfer Object)
 
-Relationship: **One User can have MANY orders (One-to-Many).**
+Exposing database entities directly to the outside world creates security risks. Therefore, we use **DTOs**.
+
+- **Role:** Carries only the data needed by the Client.
+- **Example:** `RegisterRequest` (Receives only necessary inputs), `LoginResponse` (Returns only the token).
+
+### 🔄 Mapper
+
+Handles the conversion between Entity and DTO.
+
+- **Role:** Converts `User` entity to `UserResponse` DTO.
+- **Why:** Prevents code duplication and reduces manual "setter" operations in the Service layer.
+
+### 🧠 Service (Business Logic)
+
+The intelligence of the application resides here.
+
+- **Example:** `AuthService`.
+- **Role:** When a "Register" request comes in, it hashes the password, saves the user to the database, and creates a token. The Controller never knows these details.
+
+### 🎮 Controller (Traffic Police)
+
+Receives incoming requests and directs them to the relevant service.
+
+- **Example:** `AuthController`.
+- **Role:** Uses `@Valid` annotation to check data integrity (email format, password length) and calls `AuthService`.
+
+### 🛡 Exception Handling
+
+When an error is thrown anywhere in the code (e.g., `throw new BusinessException("No stock")`), it captures this error and returns a meaningful JSON to the user.
 
 ---
 
