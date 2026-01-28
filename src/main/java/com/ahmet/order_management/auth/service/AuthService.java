@@ -57,14 +57,14 @@ public class AuthService {
         }
     }
 
-    public LoginResponse register( RegisterRequest request) {
+    public String register(RegisterRequest request) {
         log.info("Yeni kullanıcı kaydı: {}", request.getUsername());
         
         // 1. Kullanıcıyı oluştur
         // Organization ID null ise 1 varsayıyoruz (Demo amaçlı)
         Long orgId = request.getOrganizationId() != null ? request.getOrganizationId() : 1L;
         
-        com.ahmet.order_management.user.entity.User createdUser = userService.createUser(
+        userService.createUser(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword(),
@@ -73,17 +73,8 @@ public class AuthService {
                 orgId
         );
         
-        // 2. Token üret (AuthenticationManager kullanmadan direkt üretiyoruz)
-        // Çünkü user'ı az önce biz oluşturduk, şifre vs doğru eminiz.
-        // DB flush/commit gecikmesi yüzünden authManager bulamayabilir, bu yüzden manuel token basıyoruz.
-        String token = jwtUtil.generateToken(createdUser.getUsername());
+        log.info("Kullanıcı başarıyla oluşturuldu: {}", request.getUsername());
         
-        log.info("Yeni kullanıcı için token oluşturuldu: {}", createdUser.getUsername());
-        
-        return LoginResponse.builder()
-                .token(token)
-                .username(createdUser.getUsername())
-                .role(createdUser.getRole().name())
-                .build();
+        return "Kullanıcı başarıyla oluşturuldu";
     }
 }

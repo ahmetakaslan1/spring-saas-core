@@ -31,9 +31,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Yeni Kullanıcı Kaydı", description = "Yeni kullanıcı oluşturur ve otomatik giriş yapar.")
-    public ResponseEntity<ApiResponse<LoginResponse>> register(@Valid @RequestBody RegisterRequest request) {
-        LoginResponse response = authService.register(request);
+    @Operation(summary = "Yeni Kullanıcı Kaydı", description = "Yeni kullanıcı oluşturur.")
+    public ResponseEntity<ApiResponse<String>> register(@Valid @RequestBody RegisterRequest request) {
+        String response = authService.register(request);
         return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
                 .body(ApiResponse.success(response, "Kayıt başarılı"));
     }
