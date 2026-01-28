@@ -1,0 +1,98 @@
+#Eğer app inizde burası application.properties ise uzantısını yaml yapmalısınız.
+# application.properties = application.yaml stilleri değişik.
+
+# ============================================
+# Spring Boot Configuration
+# ============================================
+spring:
+  application:
+    name: order-management
+
+  # ============================================
+  # Database Configuration
+  # ============================================
+  datasource:
+    # Docker içinde: jdbc:postgresql://postgres:5432/...
+    # Local'de: jdbc:postgresql://localhost:5432/...
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/order_management}
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:admin123}
+
+    # Connection pool (HikariCP)
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+
+  # ============================================
+  # JPA / Hibernate Configuration
+  # ============================================
+  jpa:
+    # DDL auto (development: update, production: validate)
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+
+    # SQL'leri console'a yazdır (dev ortamında)
+    show-sql: ${SHOW_SQL:true}
+
+    properties:
+      hibernate:
+        # SQL'leri formatla (okunabilir)
+        format_sql: true
+
+        # Dialect (PostgreSQL için)
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+        # Batch processing (performance)
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+# ============================================
+# Server Configuration
+# ============================================
+server:
+  port: ${SERVER_PORT:8080}
+
+  # Error handling
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param # ?trace=true ile göster
+    include-exception: false
+
+# ============================================
+# JWT Configuration
+# ============================================
+jwt:
+  secret: ${JWT_SECRET:default-secret-key-change-me}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+# ============================================
+# Logging Configuration
+# ============================================
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.ahmet.order_management: ${LOG_LEVEL_APP:DEBUG}
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+  # Log pattern
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# ============================================
+# Actuator (Health Check)
+# ============================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized

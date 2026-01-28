@@ -1,0 +1,64 @@
+# ============================================
+# Docker Compose Configuration
+# ============================================
+
+# Kullanım:
+#   docker-compose up -d        → Başlat (detached mode)
+#   docker-compose down         → Durdur
+#   docker-compose logs -f app  → Logları izle
+
+
+version: '3.8'
+services:
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: order-management-db
+    
+    # Environment variables (.env dosyasından alınır)
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    
+    # Port mapping (host:container)
+    # localhost:5432 üzerinden erişilebilir
+    ports:
+      - "${DB_PORT}:5432"
+    
+    # Volume (data kalıcılığı için)
+    # Container silinse bile data kaybolmaz
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+    #Faydalı Komutlar.
+    #Database hazır mı kontrol eder
+    #Spring Boot, PostgreSQL hazır olana kadar bekler
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5      
+
+  # ============================================
+  # Spring Boot Application
+  # ============================================
+  app:
+    build: .
+    container_name: order-management-app
+    ports:
+      - "${SERVER_PORT}:8080"
+    environment:
+    #Bağlantı stringini
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy      
+
+volumes:
+  postgres_data:
+
