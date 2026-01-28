@@ -1,10 +1,43 @@
-## Saas Core  Order Management System
+## Saas Core Order Management System
 
 Bu proje, Spring Boot ve modern Java teknolojileri kullanılarak geliştirilmiş, modüler yapıda bir Sipariş Yönetim Sistemidir. Gelişmiş loglama, doğrulama (validation) ve API dokümantasyonu gibi production-ready özellikler içerir.
 
 ## 🚀 Proje Yapısı ve Modüler Yaklaşım
 
-Proje, "Independent Modules" (Bağımsız Modüller) mimarisi ile tasarlanmıştır. Bu sayede her bir özellik (feature) kendi paketi altında izole edilmiştir. Kodları incelerken şu yapıyı göreceksiniz:
+Proje, "Independent Modules" (Bağımsız Modüller) mimarisi ile tasarlanmıştır. Bu sayede her bir özellik (feature) kendi paketi altında izole edilmiştir.
+
+<details>
+<summary>📂 <strong>Proje Klasör Yapısını Gör (Tıkla ve Genişlet)</strong></summary>
+
+```
+order-management
+├── src/main/java/com/ahmet/order_management
+│   ├── auth             # Kimlik doğrulama işlemleri (Login, Register, Token)
+│   │   ├── controller   # AuthController (API Uçları)
+│   │   ├── dto          # RegisterRequest, LoginResponse vb.
+│   │   └── service      # AuthService (İş Mantığı)
+│   ├── common           # Ortak kullanılan yapılar
+│   │   ├── dto          # ApiResponse, ErrorDetails
+│   │   ├── exception    # GlobalExceptionHandler (Hata Yönetimi)
+│   │   └── util         # JwtUtil vb.
+│   ├── config           # Sistem ayarları
+│   │   ├── SecurityConfig.java # JWT ve Güvenlik kuralları
+│   │   └── OpenApiConfig.java  # Swagger ayarları
+│   ├── user             # Kullanıcı modülü
+│   │   ├── controller   # UserController
+│   │   ├── entity       # User Entity (Veritabanı karşılığı)
+│   │   └── service      # UserService
+│   └── OrderManagementApplication.java # Başlatıcı sınıf
+├── src/main/resources
+│   └── application.yaml # Uygulama ayarları
+├── docker-compose.yml   # Docker kurulum dosyası
+├── Dockerfile           # Konteyner imaj dosyası
+└── pom.xml              # Bağımlılıklar (Maven)
+```
+
+</details>
+
+Kodları incelerken şu yapıyı göreceksiniz:
 
 - **`auth`**: Kimlik doğrulama, Login/Register işlemleri ve Token yönetimi.
 - **`user`**: Kullanıcı profil yönetimi ve kullanıcıya özgü işlemler.

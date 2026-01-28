@@ -4,7 +4,40 @@ This project is an Order Management System developed using Spring Boot and moder
 
 ## 🚀 Project Structure & Modular Approach
 
-The project is designed with an "Independent Modules" architecture. This ensures that each feature is isolated under its own package. When exploring the codebase, you will see the following structure:
+The project is designed with an "Independent Modules" architecture. This ensures that each feature is isolated under its own package.
+
+<details>
+<summary>📂 <strong>View Project Folder Structure (Click to Expand)</strong></summary>
+
+```
+order-management
+├── src/main/java/com/ahmet/order_management
+│   ├── auth             # Authentication operations (Login, Register, Token)
+│   │   ├── controller   # AuthController (API Endpoints)
+│   │   ├── dto          # RegisterRequest, LoginResponse etc.
+│   │   └── service      # AuthService (Business Logic)
+│   ├── common           # Shared components
+│   │   ├── dto          # ApiResponse, ErrorDetails
+│   │   ├── exception    # GlobalExceptionHandler (Error Handling)
+│   │   └── util         # JwtUtil etc.
+│   ├── config           # System configurations
+│   │   ├── SecurityConfig.java # JWT and Security rules
+│   │   └── OpenApiConfig.java  # Swagger settings
+│   ├── user             # User module
+│   │   ├── controller   # UserController
+│   │   ├── entity       # User Entity (Database mapping)
+│   │   └── service      # UserService
+│   └── OrderManagementApplication.java # Launcher class
+├── src/main/resources
+│   └── application.yaml # Application settings
+├── docker-compose.yml   # Docker setup file
+├── Dockerfile           # Container image file
+└── pom.xml              # Dependencies (Maven)
+```
+
+</details>
+
+When exploring the codebase, you will see the following structure:
 
 - **`auth`**: Authentication, Login/Register operations, and Token management.
 - **`user`**: User profile management and user-specific operations.
